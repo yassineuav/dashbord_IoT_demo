@@ -74,20 +74,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-
-    // <html lang="en">
-    //   <body className={inter.className}>
-    //     <div className="flex">
-    //       <Sidebar collapsed={collapsed} ref={sidebarRef} />
-    //       <div className="w-full overflow-y-hidden">
-    //         <Toolbar toggleCollapsed={toggleCollapsed} ref={toggleRef} />
-    //         <main className="w-screen px-6 py-6 sm:w-auto sm:px-12">
-    //           <ThemeProvider>{children}</ThemeProvider>
-    //         </main>
-    //       </div>
-    //     </div>
-    //     {/* {children} */}
-    //   </body>
-    // </html>
   );
 }

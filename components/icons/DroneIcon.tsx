@@ -1,14 +1,14 @@
 import { IIcon } from "./types";
 
-const DroneIcon = ({ width, height }: IIcon) => (
+const DroneIcon = ({ width, height, color='currentColor'}: IIcon) => (
   <svg
-  xmlns='http://www.w3.org/2000/svg'
-  viewBox="0 0 24 24"
-  width={width}
-  height={height}
-  fill="none"
-  stroke="currentColor"
-  aria-hidden="true"  
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width={width}
+    height={height}
+    fill="none"
+    stroke={color}
+    aria-hidden="true"
     strokeLinecap="round"
     strokeLinejoin="round"
     strokeWidth="1"

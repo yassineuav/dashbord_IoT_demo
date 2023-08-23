@@ -20,8 +20,8 @@ const Sidebar = forwardRef(
     >
       <Link href='/' aria-label='Go to the dashboard' passHref>
         <div className='flex items-center justify-center space-x-3'>
-          <Feather width={28} height={28} />
-          <Heading tag='h2'>Plume</Heading>
+          <DroneIcon width={40} height={40} color="#0490C9"/>
+          <Heading tag='h3' className="text-sky-500">Drone System</Heading>
         </div>
       </Link>
 

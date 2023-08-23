@@ -1,38 +1,69 @@
-import React from 'react'
+import React from "react";
 
-const DroneTable = () => {
+const DroneTable = (data) => {
   return (
-    
+    <div className="flex flex-col">
+      <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+          <div className="overflow-hidden">
+            <table className="min-w-full text-left text-sm font-light dark:border-neutral-500">
+              <thead className="border-b font-medium dark:border-neutral-500">
+                <tr>
+                  <th scope="col" className="px-6 py-4">
+                    Drone Name
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Battery
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    distance
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    weight
+                  </th>
+                  <th scope="col" className="px-6 py-4">
+                    lastUpdate
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data && Array.isArray(data) ? (
+                  data.map((item, index) => {
+                    return (
+                      <tr
+                        className="border-b dark:border-neutral-500"
+                        key={index}
+                      >
+                        <td className="whitespace-nowrap p-2">{item.name}</td>
+                        <td className="whitespace-nowrap p-2">
+                          {item.battery}
+                        </td>
+                        <td className="whitespace-nowrap p-2">{item.status}</td>
+                        <td className="whitespace-nowrap p-2">
+                          {item.distance}
+                        </td>
+                        <td className="whitespace-nowrap p-2">
+                          {item.distance}
+                        </td>
+                        <td className="whitespace-nowrap p-2">
+                          {item.updated_at}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <p>No data available</p>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-        <table className="border-collapse border border-slate-500 min-w-full text-center text-sm ">
-          <thead className="border-b font-medium">
-            <tr>
-              <th scope="col" className="p-2 ">class</th>
-              <th scope="col" className="p-2 ">Heading</th>
-              <th scope="col" className="p-2 ">Heading</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b dark:border-neutral-500 bg-orange-400 text-gray-800">
-              <td className="whitespace-nowrap p-2 font-medium">
-                Default
-              </td>
-              <td className="whitespace-nowrap p-2">Cell</td>
-              <td className="whitespace-nowrap p-2">Cell</td>
-            </tr>
-            <tr
-              className="border-b border-primary-20">
-              <td className="whitespace-nowrap px-6 py-4 font-medium">
-                Primary
-              </td>
-              <td className="whitespace-nowrap px-6 py-4">Cell</td>
-              <td className="whitespace-nowrap px-6 py-4">Cell</td>
-            </tr>
-           
-           
-          </tbody>
-        </table>
-  )
-}
-
-export default DroneTable
+export default DroneTable;
