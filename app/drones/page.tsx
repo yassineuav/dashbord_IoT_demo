@@ -5,13 +5,14 @@ import DroneTable from '@/components/table/DroneTable'
 import React , { useEffect, useState } from 'react'
 
 import axios from "axios";
+import { MyData } from '@/types';
 
 let socket = new WebSocket("ws://localhost:8000/ws/drone/");
 
 const Drones = () => {
     const [loading, setLoading] = useState(true);
   const [serverStatus, setServerStatus] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<MyData[]>([]);
 
 
   function connect() {
@@ -48,7 +49,7 @@ const Drones = () => {
         if (allData.action === "list") {
             setData(allData.data);
           } else if (allData.action === "create") {
-            setData((data) => [...data, allData.data]);
+            setData((prevData) => [...prevData, allData.data]);
           } else if (allData.action === "update") {
             // setData(prevData => ([...prevData, ...allData.data]));
             let newData = data.map((item) => {

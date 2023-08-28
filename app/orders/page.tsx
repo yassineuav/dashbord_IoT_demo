@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Heading from "@/components/Heading";
 import { TimeAgo } from "@/utils/TimeAgo";
+import { MyData } from "@/types";
+import ProgressBar from "@/components/ProgressBar";
 
 let socket = new WebSocket("ws://localhost:8000/ws/order/");
 
 const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [serverStatus, setServerStatus] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<MyData[]>([]);
 
   function connect() {
     let sockets = new WebSocket("ws://localhost:8000/ws/order/");
@@ -58,7 +60,8 @@ const Orders = () => {
     if (allData.action === "list") {
       setData(allData.data);
     } else if (allData.action === "create") {
-      setData((data) => [...data, allData.data]);
+      setData((prevData) => [...prevData, allData.data]);
+      // setData((data) => [...data, allData.data]);
     } else if (allData.action === "update") {
       // setData(prevData => ([...prevData, ...allData.data]));
       let newData = data.map((item) => {
@@ -72,7 +75,7 @@ const Orders = () => {
     } else if (allData.action === "delete") {
       const newItems = data.filter((item) => item.id !== allData.data.id);
       setData(newItems);
-      console.log("data deleted ", newItems)
+      console.log("data deleted ", newItems);
       // setItems(newItems);
       // setData(prevData => ([...prevData, ...allData.data]));
       // let newData = data.map((item) => {
@@ -85,10 +88,11 @@ const Orders = () => {
   };
 
   if (socket.readyState === 1) {
+    // console.log("ws ready ...")
   }
 
   const addOrders = () => {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 2; i++) {
       axios
         .post("http://127.0.0.1:8000/order/", { trigger: 222 })
         .then((response) => {
@@ -97,7 +101,7 @@ const Orders = () => {
     }
   };
 
-  const deleteAllOrders = (id) => {
+  const deleteAllOrders = (id: number) => {
     axios
       .put(`http://127.0.0.1:8000/order/${id}/`, { trigger: 111 })
       .then((response) => {
@@ -127,8 +131,8 @@ const Orders = () => {
     //   };
     // Listen for messages from the WebSocket server
     // socket.addEventListener("message", (event) => {
-      // setLoading(false);
-      // setServerStatus(true)
+    // setLoading(false);
+    // setServerStatus(true)
     // });
 
     // let allData = JSON.parse(event.data);
@@ -178,7 +182,7 @@ const Orders = () => {
         <div className="col-end-10 col-span-6">
           <div className="grid grid-cols-4 gap-6 justify-center">
             <Heading tag="h3" className="pt-2">
-             Count: {data?.length}
+              Count: {data?.length}
             </Heading>
             <button
               type="button"
@@ -196,8 +200,14 @@ const Orders = () => {
             </button>
             <button
               type="button"
-              onClick={() => {connect()}}
-              className={`${serverStatus ? "bg-green-600 hover:bg-green-800" : "bg-red-600 hover:bg-red-800"} text-white font-bold py-2 px-4 rounded`}
+              onClick={() => {
+                connect();
+              }}
+              className={`${
+                serverStatus
+                  ? "bg-green-600 hover:bg-green-800"
+                  : "bg-red-600 hover:bg-red-800"
+              } text-white font-bold py-2 px-4 rounded`}
             >
               Server {serverStatus ? "ON" : "OFF"}
             </button>
@@ -215,24 +225,37 @@ const Orders = () => {
             <div>
               {data?.length &&
                 data?.map((item, index) => (
-                  <div key={index}>
-                    <h3>
+                  <div key={index} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md ring-2 ring-gray-200 dark:ring-gray-700 mt-2">
+                    <p className="dark:text-white bold text-xl">
                       Order ID: {item.id} | Weight: {item.weight} | trigger:{" "}
                       {item.trigger} | Status: {item.status} | Status id:
                       {item.status_id} | last update: {TimeAgo(item.updated_at)}
-                    </h3>
-                    <div>
-                      status histories:
-                      {item?.order_history?.length &&
-                        item?.order_history.map((status, index) => (
-                          <div key={index} >
-
-                          <h4 className="text-blue-400">
-                            {index + 1} - {status.status} - last update{" "}
-                            {TimeAgo(status.updated_at)}
-                          </h4>
-                          </div>
-                        ))}
+                    </p>
+                    <div >
+                      
+                      <ProgressBar percent={item?.order_history?.length} total={15} />
+                      status histories: {item?.order_history?.length}
+                      <ol className="grid grid-cols-4 gap-x-4 gap-y-2">
+                        {item?.order_history?.length &&
+                          item?.order_history.map((status, index) => (
+                            <li
+                              key={status.status_id}
+                              className="flex items-center text-green-600 dark:text-green-500 space-x-2.5 border border-gray-500 rounded-full shrink-0 dark:border-green-600 px-1"
+                            >
+                              <span className="flex items-center justify-center w-8 h-8 border border-green-600 rounded-full shrink-0 dark:border-green-500">
+                                {status.status_id}
+                              </span>
+                              <span>
+                                <h3 className="font-medium leading-tight bold">
+                                  {status.status}
+                                </h3>
+                                <p className="text-sm text-green-600">
+                                  {TimeAgo(status.updated_at)}
+                                </p>
+                              </span>
+                            </li>
+                          ))}
+                      </ol>
                     </div>
                   </div>
                 ))}
