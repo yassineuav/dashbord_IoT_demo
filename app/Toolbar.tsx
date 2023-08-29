@@ -10,7 +10,7 @@ interface IToolbar {
 
 const Toolbar = forwardRef(
   ({ toggleCollapsed }: IToolbar, toggleRef: React.Ref<HTMLButtonElement>) => (
-    <nav className='flex w-screen justify-between p-6 sm:w-auto'>
+    <nav className='flex w-screen justify-between p-4 sm:w-auto'>
       <button
         ref={toggleRef}
         aria-label='Toggle sidebar'

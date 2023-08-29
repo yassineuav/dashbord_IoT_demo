@@ -66,7 +66,7 @@ export default function RootLayout({
             <Sidebar collapsed={collapsed} ref={sidebarRef} />
             <div className="w-full overflow-y-hidden">
               <Toolbar toggleCollapsed={toggleCollapsed} ref={toggleRef} />
-              <main className="w-screen px-6 py-6 sm:w-auto sm:px-12">
+              <main className="w-screen sm:w-auto sm:pl-6 ">
                 {children}
               </main>
             </div>
