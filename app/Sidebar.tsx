@@ -5,6 +5,8 @@ import { Feather, Home } from '@/components/icons'
 import Heading from '@/components/Heading'
 import DroneIcon from '@/components/icons/DroneIcon'
 import OrderIcon from '@/components/icons/OrderIcon'
+import { WeatherIcon } from '@/components/icons/WeatherIcon'
+import RobotHandIcon from '@/components/icons/RobotHandIcon'
 
 interface ISidebar {
   collapsed: boolean
@@ -15,7 +17,7 @@ const Sidebar = forwardRef(
     <nav
       ref={sidebarRef}
       className={`min-h-screen w-55 border-r border-gray-200 bg-white px-4 py-6 dark:border-gray-700 dark:bg-gray-800 ${
-        collapsed ? 'ml-0 sm:-ml-64' : '-ml-64 sm:ml-0'
+        collapsed ? 'ml-6 sm:-ml-64' : '-ml-64 sm:ml-0'
       } transition-spacing duration-400 ease-in-out motion-reduce:transition-none sm:duration-500`}
     >
       <Link href='/' aria-label='Go to the dashboard' passHref>
@@ -58,6 +60,24 @@ const Sidebar = forwardRef(
           >
             <OrderIcon width={30} height={30} />
             <span>Orders</span>
+          </Link>
+          <Link
+            href='/storeRobot'
+            className='flex items-center space-x-4 px-3 py-2 text-lg hover:opacity-75'
+            role='menuitem'
+            passHref
+          >
+            <RobotHandIcon width={30} height={30} />
+            <span>Robot</span>
+          </Link>
+          <Link
+            href='/weather'
+            className='flex items-center space-x-4 px-3 py-2 text-lg hover:opacity-75'
+            role='menuitem'
+            passHref
+          >
+            <WeatherIcon width={30} height={30} />
+            <span>Weather</span>
           </Link>
         </div>
       </div>

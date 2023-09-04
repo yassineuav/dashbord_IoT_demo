@@ -64,9 +64,9 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="flex">
             <Sidebar collapsed={collapsed} ref={sidebarRef} />
-            <div className="w-full overflow-y-hidden">
+            <div className="w-full overflow-y-hidden ml-6">
               <Toolbar toggleCollapsed={toggleCollapsed} ref={toggleRef} />
-              <main className="w-screen sm:w-auto sm:pl-6 ">
+              <main className="w-screen sm:w-auto px-4 ">
                 {children}
               </main>
             </div>
