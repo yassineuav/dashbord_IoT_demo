@@ -1,6 +1,15 @@
+
+
+export interface GovernerDataType {
+    id: number;
+    info: String;
+    robot: RobotDataType[];
+    doors : DoorDataType[];
+    Aisles: AislesDataType;
+}
+
 export interface DoorDataType {
     id: number;
-    name:string;
     status: string;
     package: string;
     drone_in:boolean;
@@ -18,7 +27,7 @@ export interface RobotDataType {
     location_x : number;
     location_y : string;
     location_vertical: boolean | true;
-
+   
 }
 
 export interface AislesDataType {
@@ -30,3 +39,11 @@ export interface AislesDataType {
     doors:number;
     
 } 
+
+export interface ProductDataType {
+    id: number;
+    name: string;
+    locatedIn:string;
+    location_y: string;
+    location_x: number;
+}

@@ -2,119 +2,106 @@
 
 import Heading from "@/components/Heading";
 import DroneIcon from "@/components/icons/DroneIcon";
-import { DoorDataType, RobotDataType } from "@/types/StoreData";
+import { DoorDataType, ProductDataType, RobotDataType } from "@/types/StoreData";
+import { robots, doorInfo, products, aislesData } from "@/utils/dummy";
 import React, { useEffect, useState } from "react";
 
-let a = 1;
-let b = true;
+// robot
+let location_x = 1;
+let isVerticalLine = true;
+let package_status = "empty"
+let movemont_status = "moving"
+
+// door
+let doorStatus = "close";
+let doorPackage = "empty";
+
+
 
 const StoreRobot = () => {
-  const products = [
-    { id: 1, name: "CocaCola", y: "A", x: 1 },
-    // { id: 3, name: "abos", y: "C", x: 1 },
-    // { id: 4, name: "iswn", y: "B", x: 4 },
-    // { id: 4, name: "iswn", y: "D", x: 4 },
-    // { id: 4, name: "iswn", y: "B", x: 1 },
-  ];
-
-  const robots = [
-    {
-      id: 1,
-      location_x: 1,
-      location_y: "A",
-      location_vertical: true,
-      name: "Robot_1",
-      power_status: "ON",
-      movemont_status: "moving",
-      package_status: "empty",
-    },
-  ];
-
-  const aislesData = {
-    id: 1,
-    store_id: "store_0001",
-    string_name: "store 0001",
-    aisle_x: [1, 2, 3, 4],
-    aisle_y: ["A", "B", "C", "D"],
-    doors: 4,
-  };
-
-  const doorInfo = [
-    { id: 1,
-    status: 'open',
-    package: 'full',
-    drone_in:true,
-    drone_id:'drone_A12',
-    drone_power_status:'on',
-    drone_package_status:'full',
-    },
-    { id: 2,
-    status: 'close',
-    package: 'empty',
-    drone_in:true,
-    drone_id:'drone_A12',
-    drone_power_status:'off',
-    drone_package_status:'empty',
-    },
-    { id: 3,
-    status: 'close',
-    package: 'empty',
-    drone_in:false,
-    drone_id:'drone_A12',
-    drone_power_status:'off',
-    drone_package_status:'empty',
-    },
-    { id: 4,
-    status: 'close',
-    package: 'empty',
-    drone_in:true,
-    drone_id:'drone_A12',
-    drone_power_status:'on',
-    drone_package_status:'empty',
-    },
-]
-
-
+ 
   const [robotData, setRobotData] = useState<RobotDataType[]>(robots);
   const [doorData, setDoorData] = useState<DoorDataType[]>(doorInfo);
-
-
-
+  const [productsData, setProductsData] = useState<ProductDataType[]>(products)
 
 
   const handleMoveToTheDoor = () => {
-    if (a < 4) {
-      a++;
-    } else if (a === 4) {
-      b = false;
-      a = 4;
+    const update_product = [{ id: 1, name: "CocaCola", locatedIn:"robot", location_y: "D", location_x: 1 }]
+    
+    if (location_x < 4) {
+      location_x++;
+      if(location_x===1){
+        setProductsData(update_product)
+        package_status = "full"
+      }
+    } else if (location_x === 4) {
+      isVerticalLine = false;
+      location_x = 4;
+      package_status = "empty"
+      movemont_status = "stoped"
     }
+    
+    if(!isVerticalLine && location_x === 4  && movemont_status === "stoped"){
+
+      doorStatus = "open";
+      doorPackage = "full";
+      // robot
+      package_status = "empty"
+
+      const update_door = 
+      { id: 1,
+      status: doorStatus,
+      package: doorPackage,
+      drone_in:true,
+      drone_id:'drone_A12',
+      drone_power_status:'on',
+      drone_package_status:'empty',
+      };
+  
+      let newDoorData = doorData?.map((item) => {
+        if (item.id === update_door.id) {
+          item = update_door
+        }
+        return item
+      });
+  
+      
+    setTimeout(function () {
+      setDoorData(newDoorData)
+      // console.log(newDoorData)
+    }, 1000);
+
+    }
+
+
+
+
     const robot = {
       id: 1,
-      location_x: a,
+      location_x: location_x,
       location_y: "A",
-      location_vertical: b,
+      location_vertical: isVerticalLine,
       name: "Robot_1",
       power_status: "ON",
-      movemont_status: "moving",
-      package_status: "empty",
+      movemont_status: movemont_status,
+      package_status: package_status,
     };
 
     // delete product aisle info
     // const updatedData = products.filter(item => item.id !== 1);
     // setProductData(updatedData);
 
-   
-
+    
 
     let newRobotData = robotData?.map((item) => {
       if (item.id === robot.id) {
-        return robot;
+        item = robot;
       }
+      return item
     });
 
     setTimeout(function () {
-      // console.log(newRobotData, "x: ", a, "b", b);
+      console.log(newRobotData);
       setRobotData(newRobotData);
       
     }, 1000);
@@ -122,8 +109,10 @@ const StoreRobot = () => {
 
   const handleResetPosition = () => {
     setRobotData(robots);
-    a=0;
-    b=true;
+    location_x=0;
+    isVerticalLine=true;
+    setProductsData(products)
+    setDoorData(doorInfo)
   };
 
   useEffect(() => {
@@ -134,26 +123,6 @@ const StoreRobot = () => {
     }
   }, []);
 
-  // controll aisles crud product by robot
-  // controll robot on/off move from spot x,y to door_1...4
-  // controll door close/open | product in > drone on
-
-  // product A_1 in A1
-  // robot location {x,y,d} waiting for order
-  // door_1...4 closed / drone in/
-  // step 1: waiting to set an order for product A_1 in A1
-  // step 2: order set status product in aisle A1
-  // step 3: get robot status on and location {x, y, d}
-  // step 4: calule the distance from robot to spot A1
-  // step 5: get near by robot
-  // step 6: move the robot_n to spot A1
-  // step 8: pick product A_1
-  // step 9: set aisle A1 empty
-  // step 10: check which door ready and drone on and in_door
-  // step 11: move robot_n with product A_1 to Door_n
-  // step 12: drop off product A_1 in door_n in drone
-  // step 12: notify system product A_1 in Door_n in Drone_n is ready_to_fly
-
   return (
     <>
       <div className="grid grid-cols-8 gap-4">
@@ -163,7 +132,7 @@ const StoreRobot = () => {
             Door
           </Heading>
         </div>
-        <div className="col-end-10 col-span-6">
+        <div className="col-end-10 col-span-6 h-8">
           <div className="grid grid-cols-4 gap-6 justify-center">
             <Heading tag="h3" className="pt-2">
               products: {products?.length}
@@ -219,7 +188,8 @@ const StoreRobot = () => {
                             {robot.location_vertical === true &&
                               robot.location_x === x &&
                               robot.location_y === y && (
-                                <div className="bg-white h-20 w-4 " />
+                                <div className={`h-20 w-4 border-gray-200 ${robot.package_status === "full" ? 
+                              "bg-green-500 border-2": "border-4"}`} />
                               )}
                           </div>
                         ))}
@@ -230,9 +200,9 @@ const StoreRobot = () => {
                       >
                         {`${y}${x}`}
 
-                        {products?.map((product, index) => (
+                        {productsData.map((product, index) => (
                           <div key={index} className="bg-green-500">
-                            {product.x === x && product.y === y && (
+                            {product.locatedIn === "aisle" && product.location_x === x && product.location_y === y && (
                               <div>
                                 <div className="text-xs">id:{product.id}</div>
                                 <div className="text-sm">{product.name}</div>
@@ -248,7 +218,8 @@ const StoreRobot = () => {
                             {robot.location_vertical === false &&
                               robot.location_x === x &&
                               robot.location_y === y && (
-                                <div className="bg-white h-4 w-20 " />
+                                <div className={`h-4 w-20 border-gray-200 ${robot.package_status === "full" ? 
+                                "bg-green-500 border-2": "border-4"}`} />
                               )}
                           </div>
                         ))}
@@ -315,8 +286,21 @@ const StoreRobot = () => {
                     </div>
                   ))}
               </div>
+            </div></div>
+            {/* justify-center justify-items-center */}
+            <div className="border-2 border-gray-400 rounded-md p-2 m-1">
+            <div className="text-green-500 text-xl font-bold text-center">
+              controller test buttons
             </div>
-          </div>
+            <div className="grid grid-cols-3 gap-1 w-80 border border-gray-400 my-1 p-1">
+              <div><button className="bg-sky-400 w-24 h-6  rounded-md ">1 x up</button></div>
+              <div><button className="bg-sky-400 w-24 h-6 rounded-md ">1 x down</button></div>
+              <div><button className="bg-sky-400 w-24 h-6 rounded-md ">1 x up</button></div>
+              <div><button className="bg-sky-400 w-24 h-6 rounded-md ">1 x up</button></div>
+            </div>
+              </div>
+
+
         </div>
       </div>
     </>
